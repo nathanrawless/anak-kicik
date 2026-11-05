@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Ghibli Romance</title>
+    <!-- Tailwind CSS for layout and utilities -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Playfair Display (Serif) & Nunito (Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Base styles & Typography */
+        body {
+            font-family: 'Nunito', sans-serif;
+            /* Ghibli sunset painted sky gradient */
+            background: linear-gradient(180deg, #6ca1c9 0%, #b2cbde 35%, #f6d3a9 70%, #f4a2a2 100%);
+            color: #2c241b;
+            overflow-x: hidden;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, .serif-font {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* --- Cloud Parallax Animations --- */
+        .cloud {
+            position: absolute;
+            will-change: transform;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        @keyframes driftLeft {
+            0% { transform: translateX(110vw); }
+            100% { transform: translateX(-20vw); }
+        }
+
+        @keyframes driftRight {
+            0% { transform: translateX(-20vw); }
+            100% { transform: translateX(110vw); }
+        }
+
+        /* Distinct speeds and delays for parallax depth */
+        .cloud-1 { animation: driftRight 60s linear infinite; top: 10%; width: 250px; }
+        .cloud-2 { animation: driftRight 45s linear infinite; top: 25%; width: 180px; animation-delay: -20s; opacity: 0.6; }
+        .cloud-3 { animation: driftLeft 70s linear infinite; top: 15%; width: 300px; animation-delay: -10s; }
+        .cloud-4 { animation: driftLeft 50s linear infinite; top: 35%; width: 150px; animation-delay: -35s; opacity: 0.5; }
+
+        /* --- Smooth Text Reveal Animations --- */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+                filter: blur(4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        .animate-reveal {
+            opacity: 0;
+            animation: fadeInUp 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        .delay-100 { animation-delay: 100ms; }
+        .delay-300 { animation-delay: 300ms; }
+        .delay-500 { animation-delay: 500ms; }
+        .delay-700 { animation-delay: 700ms; }
+
+        /* --- Glassmorphism Card & Expanding Section --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Modern pure CSS smooth height transition using Grid */
+        .message-wrapper {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 1s cubic-bezier(0.25, 1, 0.5, 1);
+            width: 100%;
+        }
+
+        .message-wrapper.open {
+            grid-template-rows: 1fr;
+        }
+
+        .message-inner {
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: opacity 0.8s ease, transform 0.8s ease, visibility 0.8s ease;
+            transition-delay: 0.1s;
+            min-height: 0;
+        }
+
+        .message-wrapper.open .message-inner {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            transition-delay: 0.4s;
+        }
+
+        /* --- Button Styling --- */
+        .ghibli-btn {
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(5px);
+            color: #2c241b;
+            transition: all 0.3s ease;
+        }
+        .ghibli-btn:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        /* GIF/Image Asset Sizing Fix */
+        .gif-asset {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            min-height: 200px;
+            border-radius: 12px;
+            display: block;
+            margin: 0 auto;
+            object-fit: cover;
+            background-color: rgba(255, 255, 255, 0.2); /* Soft placeholder color while loading */
+        }
+    </style>
+</head>
+<body class="relative flex flex-col items-center justify-start sm:justify-center pt-20 sm:pt-0 pb-48">
+
+    <!-- ================= BACKGROUND ELEMENTS ================= -->
+    
+    <!-- SVG Cloud Assets (Using distinct inline SVGs for Ghibli aesthetic) -->
+    <!-- Cloud 1 -->
+    <svg class="cloud cloud-1 text-white fill-current" viewBox="0 0 100 50">
+        <path d="M 20 40 A 15 15 0 0 1 25 15 A 20 20 0 0 1 55 10 A 18 18 0 0 1 80 20 A 12 12 0 0 1 85 40 Z" />
+    </svg>
+    <!-- Cloud 2 -->
+    <svg class="cloud cloud-2 text-white fill-current" viewBox="0 0 100 50">
+        <path d="M 15 35 A 12 12 0 0 1 20 15 A 15 15 0 0 1 45 10 A 20 20 0 0 1 75 15 A 15 15 0 0 1 85 35 Z" />
+    </svg>
+    <!-- Cloud 3 -->
+    <svg class="cloud cloud-3 text-pink-50/80 fill-current" viewBox="0 0 120 60">
+        <path d="M 25 45 A 20 20 0 0 1 30 15 A 25 25 0 0 1 70 10 A 22 22 0 0 1 100 25 A 15 15 0 0 1 105 45 Z" />
+    </svg>
+    <!-- Cloud 4 -->
+    <svg class="cloud cloud-4 text-orange-50/60 fill-current" viewBox="0 0 90 40">
+        <path d="M 15 30 A 10 10 0 0 1 20 12 A 15 15 0 0 1 45 8 A 18 18 0 0 1 70 15 A 12 12 0 0 1 75 30 Z" />
+    </svg>
+
+    <!-- Foreground: Sweeping Grassy Hills -->
+    <div class="fixed bottom-0 left-0 w-full h-48 sm:h-64 z-0 pointer-events-none">
+        <!-- Back Hill (Lighter Green) -->
+        <svg class="absolute bottom-0 w-full h-full text-[#6a9e70] fill-current opacity-90" preserveAspectRatio="none" viewBox="0 0 100 100">
+            <path d="M0,100 C 40,40 70,60 100,20 L 100,100 Z" />
+        </svg>
+        <!-- Front Hill (Darker Green) -->
+        <svg class="absolute bottom-0 w-full h-4/5 text-[#4e7d54] fill-current" preserveAspectRatio="none" viewBox="0 0 100 100">
+            <path d="M0,40 C 30,80 80,30 100,60 L 100,100 L 0,100 Z" />
+        </svg>
+        
+        <!-- Static Ghibli Character: Totoro Silhouette on the hill -->
+        <svg class="absolute bottom-[20%] left-[15%] md:left-[25%] w-24 h-32 md:w-32 md:h-40 text-[#2c3e30] fill-current opacity-90" viewBox="0 0 100 120">
+            <!-- Totoro Body -->
+            <path d="M 80 90 C 80 50, 65 30, 50 30 C 35 30, 20 50, 20 90 C 20 115, 30 120, 50 120 C 70 120, 80 115, 80 90 Z" />
+            <!-- Totoro Ears -->
+            <path d="M 35 35 C 35 25, 30 10, 30 10 C 30 10, 42 20, 45 31 Z" />
+            <path d="M 65 35 C 65 25, 70 10, 70 10 C 70 10, 58 20, 55 31 Z" />
+            <!-- Little Leaf Umbrella -->
+            <path d="M 50 25 L 50 5 M 40 10 Q 50 0 60 10 Q 50 15 40 10 Z" stroke="#3b5240" stroke-width="1.5" />
+        </svg>
+    </div>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="relative z-10 w-full max-w-2xl px-6 flex flex-col items-center text-center">
+        
+        <!-- Header Section -->
+        <div class="animate-reveal delay-100 flex items-center gap-3 mb-4 opacity-80">
+            <div class="h-px w-8 bg-gray-700"></div>
+            <span class="text-xs uppercase tracking-[0.2em] font-bold text-gray-800">My Daily Magic</span>
+            <div class="h-px w-8 bg-gray-700"></div>
+        </div>
+
+        <h1 class="animate-reveal delay-300 text-5xl md:text-6xl font-bold mb-4 serif-font leading-tight text-gray-900 drop-shadow-sm">
+            You are my <br/>
+            <span class="text-white drop-shadow-md">favorite adventure.</span>
+        </h1>
+
+        <p class="animate-reveal delay-500 font-medium text-base md:text-lg max-w-lg mx-auto leading-relaxed mb-8 text-gray-800 opacity-90">
+            In a chaotic world, you are the serene forest clearing where my heart finally finds rest.
+        </p>
+
+        <!-- Interactive Icons Row -->
+        <div class="animate-reveal delay-700 z-20 mb-8 flex gap-8 md:gap-12 justify-center items-center">
+            
+            <!-- Icon 1: Dubai Cookie (Poem Reveal) -->
+            <div class="cursor-pointer group relative" id="cookie-btn">
+                <div class="relative w-20 h-20 md:w-24 md:h-24 hover:-translate-y-2 hover:scale-105 transition-all duration-300">
+                    <!-- SVG Dubai Chewy Cookie with Pistachio Ooze -->
+                    <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-xl filter drop-shadow-[0_10px_10px_rgba(0,0,0,0.15)]">
+                        <!-- Bottom Cookie Crust -->
+                        <ellipse cx="50" cy="65" rx="42" ry="22" fill="#3e2412"/>
+                        <!-- Pistachio Knafeh Ooze -->
+                        <path d="M 15 55 C 20 80, 40 90, 50 85 C 60 95, 80 80, 85 55 Z" fill="#9bc43a"/>
+                        <path d="M 30 65 C 35 90, 45 95, 55 85 C 60 75, 75 80, 75 55 Z" fill="#84ab2c"/>
+                        <!-- Knafeh strands texture -->
+                        <path d="M 35 70 Q 40 85 45 75 M 50 80 Q 55 90 60 75 M 65 65 Q 70 80 75 70" stroke="#759c1c" stroke-width="2" fill="none" stroke-linecap="round"/>
+                        <!-- Top Cookie Half -->
+                        <path d="M 10 50 C 10 20, 90 20, 90 50 C 90 65, 75 60, 60 55 C 50 60, 35 55, 10 50 Z" fill="#4d2e18"/>
+                        <!-- Dark Chocolate Chunks -->
+                        <rect x="25" y="30" width="10" height="8" rx="2" fill="#241206" transform="rotate(15 25 30)"/>
+                        <rect x="55" y="25" width="12" height="9" rx="2" fill="#241206" transform="rotate(-10 55 25)"/>
+                        <rect x="40" y="42" width="11" height="8" rx="2" fill="#241206" transform="rotate(45 40 42)"/>
+                        <rect x="70" y="40" width="8" height="8" rx="2" fill="#241206" transform="rotate(-25 70 40)"/>
+                        <rect x="18" y="42" width="8" height="6" rx="1" fill="#241206"/>
+                    </svg>
+                </div>
+                <!-- Tooltip -->
+                <div class="absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-[10px] font-bold text-gray-800 tracking-widest whitespace-nowrap bg-white/60 px-3 py-1 rounded-full backdrop-blur-sm pointer-events-none shadow-sm z-30">
+                    POEM
+                </div>
+            </div>
+
+            <!-- Icon 2: Matcha Latte (GIF Reveal) -->
+            <div class="cursor-pointer group relative" id="matcha-btn">
+                <div class="relative w-20 h-20 md:w-24 md:h-24 hover:-translate-y-2 hover:scale-105 transition-all duration-300">
+                    <!-- SVG Matcha Latte -->
+                    <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-xl filter drop-shadow-[0_10px_10px_rgba(0,0,0,0.15)]">
+                        <!-- Steam lines -->
+                        <path d="M 40 25 Q 35 15 45 5" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6" class="animate-pulse"/>
+                        <path d="M 60 20 Q 55 10 65 0" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6" class="animate-pulse delay-75"/>
+                        <!-- Mug Handle -->
+                        <path d="M 70 45 C 95 45, 95 70, 70 70" fill="none" stroke="#f0eadd" stroke-width="8" stroke-linecap="round"/>
+                        <!-- Mug Body -->
+                        <path d="M 25 35 L 25 75 C 25 90, 75 90, 75 75 L 75 35 Z" fill="#fcfbf7"/>
+                        <!-- Inner Mug Rim -->
+                        <ellipse cx="50" cy="35" rx="25" ry="10" fill="#e8e2d3"/>
+                        <!-- Matcha Liquid -->
+                        <ellipse cx="50" cy="37" rx="22" ry="7" fill="#84ab2c"/>
+                        <!-- Latte Art (Heart/Leaf representation) -->
+                        <path d="M 50 40 C 50 40, 45 35, 40 37 C 35 39, 40 43, 50 43 C 60 43, 65 39, 60 37 C 55 35, 50 40, 50 40 Z" fill="#fcfbf7" opacity="0.8"/>
+                    </svg>
+                </div>
+                <!-- Tooltip -->
+                <div class="absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-[10px] font-bold text-gray-800 tracking-widest whitespace-nowrap bg-white/60 px-3 py-1 rounded-full backdrop-blur-sm pointer-events-none shadow-sm z-30">
+                    TEA TIME
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Hidden Romantic Message (Expands smoothly) -->
+        <div id="message-container" class="message-wrapper">
+            <div class="message-inner w-full flex justify-center pb-4">
+                <div class="glass-card p-8 md:p-10 rounded-[2rem] w-full relative">
+                    
+                    <h2 class="serif-font text-2xl md:text-3xl text-gray-900 mb-6 italic">My dearest,</h2>
+                    
+                    <p class="text-lg font-light leading-loose text-gray-800 mb-6">
+                        Like skies clearing after the rain, <br class="hidden md:block">
+                        your smile brings color to my world.<br><br>
+                        You are the gentle breeze moving through the trees,<br class="hidden md:block">
+                        the warmth of the sun breaking through the clouds.<br>
+                        With you, the simplest moments become magic.
+                    </p>
+                    
+                    <div class="mt-8 flex flex-col items-center justify-center">
+                        <svg class="w-6 h-6 text-rose-400 mb-3 drop-shadow-sm" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path></svg>
+                        <p class="text-xs uppercase tracking-widest text-gray-900 font-bold">I love you, always.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Hidden GIF Asset (Expands smoothly) -->
+        <div id="gif-container" class="message-wrapper">
+            <div class="message-inner w-full flex justify-center pb-4">
+                <div class="glass-card p-4 md:p-6 rounded-[2rem] w-full max-w-md relative flex flex-col items-center">
+                    <h3 class="serif-font text-xl text-gray-900 mb-4 italic">A Sweet Celebration</h3>
+                    <img src="51001_161e1b.jpg" alt="Ghibli Cake" class="gif-asset" />
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ================= INTERACTION SCRIPT ================= -->
+    <script>
+        const cookieBtn = document.getElementById('cookie-btn');
+        const matchaBtn = document.getElementById('matcha-btn');
+        const msgContainer = document.getElementById('message-container');
+        const gifContainer = document.getElementById('gif-container');
+        
+        let isPoemOpen = false;
+        let isGifOpen = false;
+
+        cookieBtn.addEventListener('click', () => {
+            // Close the GIF if it's open
+            if (isGifOpen) {
+                gifContainer.classList.remove('open');
+                isGifOpen = false;
+            }
+            
+            // Toggle the poem
+            isPoemOpen = !isPoemOpen;
+            if (isPoemOpen) {
+                msgContainer.classList.add('open');
+                setTimeout(() => {
+                    msgContainer.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                }, 300);
+            } else {
+                msgContainer.classList.remove('open');
+            }
+        });
+
+        matchaBtn.addEventListener('click', () => {
+            // Close the poem if it's open
+            if (isPoemOpen) {
+                msgContainer.classList.remove('open');
+                isPoemOpen = false;
+            }
+            
+            // Toggle the GIF
+            isGifOpen = !isGifOpen;
+            if (isGifOpen) {
+                gifContainer.classList.add('open');
+                setTimeout(() => {
+                    gifContainer.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                }, 300);
+            } else {
+                gifContainer.classList.remove('open');
+            }
+        });
+    </script>
+</body>
+</html>
